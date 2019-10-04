@@ -9,8 +9,8 @@ using eShopApp.Domain.Data;
 namespace eShopApp.Domain.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20190925090310_cart1")]
-    partial class cart1
+    [Migration("20191001101057_payment2")]
+    partial class payment2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,11 +26,17 @@ namespace eShopApp.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Amount");
+
                     b.Property<int>("CusId");
 
                     b.Property<int>("Id");
 
-                    b.Property<int>("Quantity");
+                    b.Property<decimal>("Price");
+
+                    b.Property<string>("name");
+
+                    b.Property<int>("quantity");
 
                     b.HasKey("CartId");
 
@@ -82,6 +88,59 @@ namespace eShopApp.Domain.Migrations
                     b.ToTable("Customers");
                 });
 
+            modelBuilder.Entity("eShopApp.Models.OrderPlace", b =>
+                {
+                    b.Property<int>("OrderId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Address")
+                        .IsRequired();
+
+                    b.Property<string>("City")
+                        .IsRequired();
+
+                    b.Property<int>("CusId");
+
+                    b.Property<string>("Email")
+                        .IsRequired();
+
+                    b.Property<string>("FullName")
+                        .IsRequired();
+
+                    b.Property<string>("State")
+                        .IsRequired();
+
+                    b.HasKey("OrderId");
+
+                    b.HasIndex("CusId");
+
+                    b.ToTable("Orders");
+                });
+
+            modelBuilder.Entity("eShopApp.Models.Payment", b =>
+                {
+                    b.Property<int>("PaymentId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("CVV");
+
+                    b.Property<string>("CardNumber");
+
+                    b.Property<int>("CusId");
+
+                    b.Property<string>("CustomerName");
+
+                    b.Property<string>("ExpMonth");
+
+                    b.HasKey("PaymentId");
+
+                    b.HasIndex("CusId");
+
+                    b.ToTable("payments");
+                });
+
             modelBuilder.Entity("eShopApp.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -93,6 +152,8 @@ namespace eShopApp.Domain.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
+                    b.Property<int>("DsicountPrice");
+
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -100,6 +161,11 @@ namespace eShopApp.Domain.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("ProImage")
+                        .IsRequired();
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("discount")
                         .IsRequired();
 
                     b.HasKey("Id");
@@ -119,6 +185,22 @@ namespace eShopApp.Domain.Migrations
                     b.HasOne("eShopApp.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("eShopApp.Models.OrderPlace", b =>
+                {
+                    b.HasOne("eShopApp.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CusId")
+                        .OnDelete(DeleteBehavior.Cascade);
+                });
+
+            modelBuilder.Entity("eShopApp.Models.Payment", b =>
+                {
+                    b.HasOne("eShopApp.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CusId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

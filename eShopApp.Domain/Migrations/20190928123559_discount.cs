@@ -2,13 +2,13 @@
 
 namespace eShopApp.Domain.Migrations
 {
-    public partial class cart2 : Migration
+    public partial class discount : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.AddColumn<int>(
-                name: "Amount",
-                table: "Carts",
+                name: "discount",
+                table: "Products",
                 nullable: false,
                 defaultValue: 0);
         }
@@ -16,8 +16,8 @@ namespace eShopApp.Domain.Migrations
         protected override void Down(MigrationBuilder migrationBuilder)
         {
             migrationBuilder.DropColumn(
-                name: "Amount",
-                table: "Carts");
+                name: "discount",
+                table: "Products");
         }
     }
 }

@@ -43,8 +43,8 @@ namespace eShopApp.API.Controllers
         }
 
         // PUT: api/Product/5
-        [HttpPut("{id}")]
-        public bool Put([FromBody] Product product,[FromRoute] int id)
+        [HttpPut]
+        public bool Put([FromBody] Product product)
         {
           _productRepository.UpdateProduct(product);
             return true;

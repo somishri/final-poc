@@ -9,8 +9,8 @@ using eShopApp.Domain.Data;
 namespace eShopApp.Domain.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20190920100942_initial1")]
-    partial class initial1
+    [Migration("20190928125037_discount2")]
+    partial class discount2
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -19,6 +19,33 @@ namespace eShopApp.Domain.Migrations
                 .HasAnnotation("ProductVersion", "2.2.6-servicing-10079")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("eShopApp.Models.Cart", b =>
+                {
+                    b.Property<int>("CartId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Amount");
+
+                    b.Property<int>("CusId");
+
+                    b.Property<int>("Id");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<string>("name");
+
+                    b.Property<int>("quantity");
+
+                    b.HasKey("CartId");
+
+                    b.HasIndex("CusId");
+
+                    b.HasIndex("Id");
+
+                    b.ToTable("Carts");
+                });
 
             modelBuilder.Entity("eShopApp.Models.Category", b =>
                 {
@@ -34,6 +61,33 @@ namespace eShopApp.Domain.Migrations
                     b.ToTable("Categories");
                 });
 
+            modelBuilder.Entity("eShopApp.Models.Customer", b =>
+                {
+                    b.Property<int>("CusId")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Email")
+                        .IsRequired();
+
+                    b.Property<string>("FirstName")
+                        .IsRequired();
+
+                    b.Property<string>("LastName")
+                        .IsRequired();
+
+                    b.Property<string>("Password")
+                        .IsRequired();
+
+                    b.Property<int>("PhoneNumber");
+
+                    b.Property<string>("role");
+
+                    b.HasKey("CusId");
+
+                    b.ToTable("Customers");
+                });
+
             modelBuilder.Entity("eShopApp.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -45,6 +99,8 @@ namespace eShopApp.Domain.Migrations
                     b.Property<string>("Description")
                         .IsRequired();
 
+                    b.Property<int>("DsicountPrice");
+
                     b.Property<string>("Name")
                         .IsRequired();
 
@@ -54,11 +110,29 @@ namespace eShopApp.Domain.Migrations
                     b.Property<string>("ProImage")
                         .IsRequired();
 
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("discount")
+                        .IsRequired();
+
                     b.HasKey("Id");
 
                     b.HasIndex("CatId");
 
                     b.ToTable("Products");
+                });
+
+            modelBuilder.Entity("eShopApp.Models.Cart", b =>
+                {
+                    b.HasOne("eShopApp.Models.Customer", "Customer")
+                        .WithMany()
+                        .HasForeignKey("CusId")
+                        .OnDelete(DeleteBehavior.Cascade);
+
+                    b.HasOne("eShopApp.Models.Product", "Product")
+                        .WithMany()
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade);
                 });
 
             modelBuilder.Entity("eShopApp.Models.Product", b =>

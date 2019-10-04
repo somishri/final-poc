@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using eShopApp.Domain.Data;
 
 namespace eShopApp.Domain.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    partial class ProductDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190930114149_order")]
+    partial class order
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -86,59 +88,6 @@ namespace eShopApp.Domain.Migrations
                     b.ToTable("Customers");
                 });
 
-            modelBuilder.Entity("eShopApp.Models.OrderPlace", b =>
-                {
-                    b.Property<int>("OrderId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Address")
-                        .IsRequired();
-
-                    b.Property<string>("City")
-                        .IsRequired();
-
-                    b.Property<int>("CusId");
-
-                    b.Property<string>("Email")
-                        .IsRequired();
-
-                    b.Property<string>("FullName")
-                        .IsRequired();
-
-                    b.Property<string>("State")
-                        .IsRequired();
-
-                    b.HasKey("OrderId");
-
-                    b.HasIndex("CusId");
-
-                    b.ToTable("Orders");
-                });
-
-            modelBuilder.Entity("eShopApp.Models.Payment", b =>
-                {
-                    b.Property<int>("PaymentId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("CVV");
-
-                    b.Property<string>("CardNumber");
-
-                    b.Property<int>("CusId");
-
-                    b.Property<string>("CustomerName");
-
-                    b.Property<string>("ExpMonth");
-
-                    b.HasKey("PaymentId");
-
-                    b.HasIndex("CusId");
-
-                    b.ToTable("payments");
-                });
-
             modelBuilder.Entity("eShopApp.Models.Product", b =>
                 {
                     b.Property<int>("Id")
@@ -183,22 +132,6 @@ namespace eShopApp.Domain.Migrations
                     b.HasOne("eShopApp.Models.Product", "Product")
                         .WithMany()
                         .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("eShopApp.Models.OrderPlace", b =>
-                {
-                    b.HasOne("eShopApp.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CusId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("eShopApp.Models.Payment", b =>
-                {
-                    b.HasOne("eShopApp.Models.Customer", "Customer")
-                        .WithMany()
-                        .HasForeignKey("CusId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });
 

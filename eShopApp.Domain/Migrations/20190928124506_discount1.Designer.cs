@@ -9,8 +9,8 @@ using eShopApp.Domain.Data;
 namespace eShopApp.Domain.Migrations
 {
     [DbContext(typeof(ProductDbContext))]
-    [Migration("20190925065200_cart")]
-    partial class cart
+    [Migration("20190928124506_discount1")]
+    partial class discount1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -26,9 +26,17 @@ namespace eShopApp.Domain.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<decimal>("Amount");
+
                     b.Property<int>("CusId");
 
                     b.Property<int>("Id");
+
+                    b.Property<decimal>("Price");
+
+                    b.Property<string>("name");
+
+                    b.Property<int>("quantity");
 
                     b.HasKey("CartId");
 
@@ -98,6 +106,11 @@ namespace eShopApp.Domain.Migrations
                         .HasColumnType("decimal(10,2)");
 
                     b.Property<string>("ProImage")
+                        .IsRequired();
+
+                    b.Property<int>("Quantity");
+
+                    b.Property<string>("discount")
                         .IsRequired();
 
                     b.HasKey("Id");

@@ -18,51 +18,42 @@ namespace eShopApp.API.Controllers
         {
             _cartRepository = cartRepository;
         }
-        //get: api/cart
-        [HttpGet("getcarts/{userId}")]
-        public List<Cart> List(int userId)
+    
+
+        [HttpGet("getCartItemByUserID/{id}")]
+        public async Task<IActionResult> GetCateItem([FromRoute] int id)
         {
-            return _cartRepository.GetCarts(userId);
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+
+            var cart = _cartRepository.getCart(id);
+
+
+
+            if (cart == null)
+            {
+                return NotFound();
+            }
+
+
+
+            return Ok(cart);
         }
 
-        //// GET: api/Cart/5
-        //[HttpGet("{id}", Name = "Get")]
-        //public string Get(int id)
-        //{
-        ////    return "value";
-        ////}
-        //[HttpGet("{userId}")]
-        //public IEnumerable<Cart> List(int userId)
-        //{
-        //    return _cartRepository.Carts(userId);
-        //}
-        //[HttpGet("updatequantitytocart/{cartId}/{quantity}")]
-        //public void UpdateQuantityToCart([FromRoute] int cartId, [FromRoute] int quantity) //add total amount in cart
-        //{
-        //    _cartRepository.UpdateQuantityToCart(cartId, quantity);
-        //}
-
-        // POST: api/Cart
-        [HttpPost]
+        //POST: api/Cart
+       [HttpPost]
         public bool Post([FromBody] Cart cart)
-        {
-            cart.Amount = cart.Price * cart.OrderQuantity;
+        {           
             return _cartRepository.AddToCart(cart);
         }
-
-        // DELETE: api/ApiWithActions/5
         [HttpDelete("{id}")]
         public bool Delete(int id)
         {
-            _cartRepository.DeleteCart(id);
-            return true;
+            return _cartRepository.DeleteCartItem(id);
         }
-
-        [HttpDelete("emptycart/{userId}")]
-        public bool EmptyCart(int userId)
-        {
-            _cartRepository.EmptyCart(userId);
-            return true;
-        }
+     
     }
 }

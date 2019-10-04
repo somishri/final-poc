@@ -16,62 +16,63 @@ namespace eShopApp.Domain.Repositories
         {
             _productDbContext = productDbContext;
         }
-        public List<Cart> GetCarts(int userId)
-        {
-            return _productDbContext.Carts.Where(c => c.CusId == userId).ToList();
-        }
+
+        //*******************************Add to cart*****************************************************************************//
         public bool AddToCart(Cart cart)
         {
-            var existingCart = GetCartByProductId(cart.Id, cart.CusId);
-            if (existingCart == null)
-            {
-                _productDbContext.Carts.Add(cart);
-                _productDbContext.SaveChanges();
-            }
-            else
-            {
-                existingCart.OrderQuantity = existingCart.OrderQuantity + cart.OrderQuantity;
-                existingCart.Amount = existingCart.Price * existingCart.OrderQuantity;
-                UpdateCart(existingCart);
-            }
+            Product product = _productDbContext.Products.Where(x => x.Id == cart.Id).FirstOrDefault();
 
+            if (product.Quantity > cart.quantity)
+            {
+                var existingCart = GetCartByProductId(cart.Id, cart.CusId);
+
+                if (existingCart == null)
+                {
+                    cart.Amount = cart.Price * cart.quantity;
+                    _productDbContext.Carts.Add(cart);
+                    _productDbContext.SaveChanges();
+                }
+                else
+                {
+                    existingCart.quantity = existingCart.quantity + cart.quantity;
+                    existingCart.Amount = existingCart.quantity * cart.Price;
+                    _productDbContext.Entry(existingCart).State = EntityState.Modified;
+                    _productDbContext.SaveChanges();
+                }
+            }
             return true;
         }
-
-        public void DeleteCart(int cartId)
-        {
-            _productDbContext.Carts.Remove(GetCart(cartId));
-            _productDbContext.SaveChanges();
-        }
-
-        public Cart GetCart(int cartId)
-        {
-            return _productDbContext.Carts.Find(cartId);
-        }
-
-        public void UpdateQuantityToCart(int cartId, int quantity)
-        {
-            Cart cart = GetCart(cartId);
-            cart.OrderQuantity = quantity;
-            cart.Amount = cart.Price * cart.OrderQuantity;
-            UpdateCart(cart);
-        }
-        public void UpdateCart(Cart cart)
-        {
-            _productDbContext.Carts.Update(cart);
-            _productDbContext.SaveChanges();
-        }
-
         public Cart GetCartByProductId(int productId, int userId)
         {
             return _productDbContext.Carts.SingleOrDefault(c => c.CusId == userId && c.Id == productId);
         }
-
-        public void EmptyCart(int userId)
+        public IEnumerable<Cart> getCart(int id)
         {
-            var carts = GetCarts(userId);
-            _productDbContext.Carts.RemoveRange(carts);
-            _productDbContext.SaveChanges();
+            var q = from r in _productDbContext.Carts where r.CusId == id select r;
+            return q;
+
         }
+        //****************************************************************************************************************//
+        public IEnumerable<Cart> GetCarts(int userId)
+        {
+            return _productDbContext.Carts.Where(c => c.CusId == userId);
+        }
+
+        public bool DeleteCartItem(int cartid)
+        {
+            var delp = _productDbContext.Carts.Where(k => k.CartId == cartid).FirstOrDefault();
+
+            if (delp == null)
+            {
+                return false;
+            }
+
+            _productDbContext.Carts.Remove(delp);
+            _productDbContext.SaveChanges();
+
+            return true;
+        }
+
+
     }
 }

@@ -10,5 +10,7 @@ namespace eShopApp.Domain.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Cart> Carts { get; set; }
+        public DbSet<OrderPlace> Orders { get; set; }
+        public DbSet<Payment> payments { get; set; }
     }
 }

@@ -44,6 +44,8 @@ namespace eShopApp.API
             services.AddTransient<ICustomerRepository, CustomerRepository>();
             services.AddTransient<IloginRepository, LoginRepository>();
             services.AddTransient<ICartRepository, CartRepository>();
+            services.AddTransient<IOrderRepository, OrderRespository>();
+            services.AddTransient<IPaymentRepository, PaymentRepository>();
             services.AddCors();
             services.AddAuthentication(x =>
             {

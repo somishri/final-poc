@@ -60,6 +60,10 @@ namespace eShopApp.Domain.Repositories
             _productDbContext.SaveChanges();
             return true;
         }
+        //public bool GetSearch()
+        //{
+        //  return   _productDbContext.Products.Include(c => c.Category).FirstOrDefault(p => p.CatId);
+        //}
     }
 }
 
